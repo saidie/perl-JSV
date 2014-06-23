@@ -23,7 +23,10 @@ sub validate {
     }
 
     unless ($valid_cnt == 1) {
-        $context->log_error("The instance is not matched to one of schemas");
+        $context->log_error(sprintf(
+            "The instance is not matched to one of schemas: valid_cnt = %d",
+            $valid_cnt
+        ));
     }
 }
 
