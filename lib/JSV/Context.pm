@@ -17,6 +17,7 @@ use Class::Accessor::Lite (
         history
         json
         loose_type
+        fill_default
     /],
     ro  => [qw/
         errors

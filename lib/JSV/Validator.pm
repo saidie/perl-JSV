@@ -111,7 +111,8 @@ sub validate {
 
     $opts ||= +{};
     %$opts = (
-        loose_type => 0,
+        loose_type   => 0,
+        fill_default => 0,
         %$opts,
     );
 
@@ -136,6 +137,7 @@ sub validate {
         current_pointer  => "",
         json             => JSON->new->allow_nonref,
         loose_type       => $opts->{loose_type},
+        fill_default     => $opts->{fill_default},
     );
 
     return $context->validate($schema, $instance);

@@ -16,6 +16,8 @@ sub validate {
     my ($class, $context, $schema, $instance) = @_;
 
     my $properties = $class->keyword_value($schema) || {};
+    my %p = map { $_ => undef } keys %$properties;
+
     my $pattern_properties = $class->keyword_value($schema, "patternProperties") || {};
 
     my @patterns = ();
@@ -35,6 +37,7 @@ sub validate {
         if (exists $properties->{$property}) {
             $context->validate($properties->{$property}, $instance->{$property});
             delete $s{$property};
+            delete $p{$property};
         }
 
         for (my $i = 0, my $l = scalar(@patterns); $i < $l; $i++) {
@@ -45,6 +48,15 @@ sub validate {
 
         if (exists $s{$property} && $additional_properties_type eq "object") {
             $context->validate($additional_properties, $instance->{$property});
+        }
+    }
+
+    if ($context->fill_default) {
+        for my $property (keys %p) {
+            next unless defined $properties->{$property}->{default};
+            my $default = $properties->{$property}->{default};
+            $context->validate($properties->{$property}, $default);
+            $instance->{$property} = $default;
         }
     }
 
